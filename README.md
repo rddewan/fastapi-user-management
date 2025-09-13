@@ -23,3 +23,15 @@ source .venv/Scripts/activate
 ```bash
 deactivate
 ```
+
+### Install Dependencies
+```bash
+pip install -r requirements.txt
+```
+
+
+### Run the Application
+```bash
+fastapi dev
+```
+
