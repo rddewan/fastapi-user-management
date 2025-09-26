@@ -3,6 +3,11 @@
 ### To Activate Python Virtual Environment
 * DOC: https://fastapi.tiangolo.com/virtual-environments/#__tabbed_2_2
 
+* create a virtual environment
+```bash
+python -m venv .venv
+```
+
 * Mac/ Linux
 ```bash
 source .venv/bin/activate
