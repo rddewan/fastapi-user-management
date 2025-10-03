@@ -40,3 +40,8 @@ pip install -r requirements.txt
 fastapi dev
 ```
 
+### Run Postgres DB in docker
+1. Run Postgres DB container
+```bash
+docker compose -f docker-compose-dev.yaml --env-file .env up -d
+```
