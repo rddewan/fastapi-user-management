@@ -1,18 +1,22 @@
-
 from typing import override
-from app.features.admin.country.application.interface.icountry_repository import ICountryRepository
+from app.features.admin.country.application.interface.icountry_repository import (
+    ICountryRepository,
+)
 from sqlalchemy.orm import Session
 from app.features.admin.country.domain.country_entity import CountryEntity
 from app.features.admin.country.infrastructure.models.country_model import CountryModel
-from app.features.admin.country.infrastructure.mappers.map_country_entity_to_country_model import map_country_entity_to_country_model
-from app.features.admin.country.infrastructure.mappers.map_country_model_to_country_entity import map_country_model_to_country_entity
+from app.features.admin.country.infrastructure.mappers.map_country_entity_to_country_model import (
+    map_country_entity_to_country_model,
+)
+from app.features.admin.country.infrastructure.mappers.map_country_model_to_country_entity import (
+    map_country_model_to_country_entity,
+)
 
 
 class CountryRepository(ICountryRepository):
 
     def __init__(self, session: Session):
         self.session: Session = session
-
 
     @override
     def get_all_countries(self) -> list[CountryEntity]:
@@ -22,7 +26,10 @@ class CountryRepository(ICountryRepository):
         Returns:
             list[CountryEntity]: List of country entities
         """
-        result = self.session.query(CountryModel).all()
+        countries = self.session.query(CountryModel).all()
+        # Map country model to country entity
+        result = [map_country_model_to_country_entity(country) for country in countries]
+        # Return list of country entities
         return result
 
     @override
@@ -36,10 +43,14 @@ class CountryRepository(ICountryRepository):
         Returns:
             CountryEntity: Country entity
         """
-        result = self.session.query(CountryModel).filter(CountryModel.id == country_id).first()
+        result = (
+            self.session.query(CountryModel)
+            .filter(CountryModel.id == country_id)
+            .first()
+        )
         return result
 
-    @override 
+    @override
     def create_country(self, country: CountryEntity) -> CountryEntity:
         """
         Create country
@@ -74,7 +85,11 @@ class CountryRepository(ICountryRepository):
         """
 
         # Get country by id
-        country_model = self.session.query(CountryModel).filter(CountryModel.id == country_id).first()
+        country_model = (
+            self.session.query(CountryModel)
+            .filter(CountryModel.id == country_id)
+            .first()
+        )
         # TODO: raise exception if country is not found
 
         # Map country entity to country model
@@ -86,7 +101,7 @@ class CountryRepository(ICountryRepository):
         # Map country model to country entity and return
         return map_country_model_to_country_entity(country_model)
 
-    @override   
+    @override
     def delete_country(self, country_id: int) -> bool:
         """
         Delete country
@@ -95,7 +110,11 @@ class CountryRepository(ICountryRepository):
             country_id (int): Country id
         """
         # Get country by id
-        country_model = self.session.query(CountryModel).filter(CountryModel.id == country_id).first()
+        country_model = (
+            self.session.query(CountryModel)
+            .filter(CountryModel.id == country_id)
+            .first()
+        )
         # TODO: raise exception if country is not found
 
         # Delete country model
@@ -104,5 +123,3 @@ class CountryRepository(ICountryRepository):
         self.session.commit()
         # Return true
         return True
-        
-        

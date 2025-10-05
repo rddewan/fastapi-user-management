@@ -1,4 +1,11 @@
 
+### VS Code Setup
+1. Install Python extension : https://marketplace.windsurf.com/vscode/item?itemName=ms-python.python
+2. Install Pylance extension : https://marketplace.windsurf.com/vscode/item?itemName=ms-python.vscode-pylance
+3. Install autoDocstring - Python Docstring Generator :https://marketplace.windsurf.com/vscode/item?itemName=njpwerner.autodocstring
+4. Install Code Spell Checker :https://marketplace.windsurf.com/vscode/item?itemName=streetsidesoftware.code-spell-checker
+5. Install Pyright : https://marketplace.windsurf.com/vscode/item?itemName=Codeium.windsurfPyright
+6. Install Black Formatter : https://marketplace.windsurf.com/vscode/item?itemName=ms-python.black-formatter
 
 ### To Activate Python Virtual Environment
 * DOC: https://fastapi.tiangolo.com/virtual-environments/#__tabbed_2_2
