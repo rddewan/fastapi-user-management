@@ -36,7 +36,7 @@ class ICountryRepository(ABC):
         pass
     
     @abstractmethod
-    def delete_country(self, country_id: int) -> None:
+    def delete_country(self, country_id: int) -> bool:
         """
         Delete country
         """
