@@ -2,7 +2,7 @@
 
 from sqlalchemy import Column, DateTime, Integer, String
 from app.core.data.source.local.base import Base
-from sqlalchemy.orm import func
+from sqlalchemy.sql import func
 
 class CountryModel(Base):
     __tablename__ = "countries"
