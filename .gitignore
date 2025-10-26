@@ -1,0 +1,8 @@
+*.log
+*.env
+*.env.dev
+*.env.prod
+*.csv
+*.ipynb
+.venv/
+__pycache__

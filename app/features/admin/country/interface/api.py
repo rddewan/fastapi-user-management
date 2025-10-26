@@ -4,7 +4,7 @@ from fastapi import Depends, status
 from app.core.router.router import get_versioned_router
 from app.features.admin.country.application.country_service import CountryService
 from app.features.admin.country.interface.dependencies import get_country_service
-from app.features.admin.country.interface.schemas import CountryListResponse, CountryResponse
+from app.features.admin.country.interface.schemas import CountryCreate, CountryListResponse, CountryResponse
 from app.features.admin.country.domain.country_entity import CountryEntity
 
 v1_router = get_versioned_router("v1")
@@ -32,11 +32,17 @@ def get_country_by_id(
 
 @v1_router.post("/admin/countries", status_code=status.HTTP_201_CREATED)
 def create_country(
-    data: CountryEntity,
+    data: CountryCreate,
     country_service: Annotated[CountryService, Depends(get_country_service)]
 ) -> CountryResponse:
+    # map the data to the country entity
+    country = CountryEntity(
+        name=data.name,
+        country_code=data.country_code,
+        currency_code=data.currency_code,
+    )
     # call the service method to create the country
-    result = country_service.create_country(data)
+    result = country_service.create_country(country)
     # return CountryResponse(status="success", data=result) 
     return CountryResponse(status="success", data=result)
 

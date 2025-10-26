@@ -1,12 +1,13 @@
-
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Optional
+
 
 @dataclass
 class CountryEntity:
-    id: int
     name: str
     country_code: str
     currency_code: str
-    created_at: datetime
-    updated_at: datetime
+    id: Optional[int] = None
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None

@@ -52,3 +52,17 @@ fastapi dev
 ```bash
 docker compose -f docker-compose-dev.yaml --env-file .env up -d
 ```
+
+### Setup the alembic
+```bash
+alembic init alembic
+```
+
+### alembic commands
+```bash
+# create a new migration
+alembic revision --autogenerate -m "message"
+
+# apply migrations
+alembic upgrade head
+```

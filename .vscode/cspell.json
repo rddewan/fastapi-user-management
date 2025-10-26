@@ -13,6 +13,9 @@
         "icountry",
         "Dunder",
         "icountry",
-        "icountry"
+        "icountry",
+        "pycache",
+        "venv",
+        "pynb"
     ]
 }

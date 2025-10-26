@@ -12,10 +12,7 @@ def map_country_entity_to_country_model(entity: CountryEntity) -> CountryModel:
         CountryModel: The mapped CountryModel.
     """
     return CountryModel(
-        id=entity.id,
         name=entity.name,
         country_code=entity.country_code,
-        currency_code=entity.currency_code,
-        created_at=entity.created_at,
-        updated_at=entity.updated_at,
+        currency_code=entity.currency_code
     )
