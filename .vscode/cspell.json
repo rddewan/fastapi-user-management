@@ -13,6 +13,8 @@
         "icountry",
         "Dunder",
         "icountry",
-        "icountry"
+        "icountry",
+        "poolclass",
+        "dotenv"
     ]
 }
