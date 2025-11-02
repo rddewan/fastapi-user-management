@@ -48,7 +48,7 @@ class CountryRepository(ICountryRepository):
             .filter(CountryModel.id == country_id)
             .first()
         )
-        return result
+        return map_country_model_to_country_entity(result)
 
     @override
     def create_country(self, country: CountryEntity) -> CountryEntity:
@@ -65,11 +65,11 @@ class CountryRepository(ICountryRepository):
         # Map country entity to country model
         country_model = map_country_entity_to_country_model(country)
         # Add country model to session
-        result = self.session.add(country_model)
+        self.session.add(country_model)
         # Commit session
         self.session.commit()
         # Map country model to country entity and return
-        return map_country_model_to_country_entity(result)
+        return map_country_model_to_country_entity(country_model)
 
     @override
     def update_country(self, country_id: int, country: CountryEntity) -> CountryEntity:
@@ -93,9 +93,7 @@ class CountryRepository(ICountryRepository):
         # TODO: raise exception if country is not found
 
         # Map country entity to country model
-        country_model = map_country_entity_to_country_model(country)
-        # Update country model
-        self.session.update(country_model)
+        country_model = map_country_entity_to_country_model(country, country_model)        
         # Commit session
         self.session.commit()
         # Map country model to country entity and return
