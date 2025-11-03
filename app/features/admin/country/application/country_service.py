@@ -7,14 +7,14 @@ class CountryService:
     def __init__(self, repository: ICountryRepository):
         self.repository = repository
 
-    def get_all_countries(self) -> list[CountryEntity]:
+    def get_all_countries(self, skip: int, limit: int) -> tuple[list[CountryEntity], int, int]:
         """Get all the countries
 
         Returns:
             list[CountryEntity]: this will return a list of the CountryEntity
         """
 
-        return self.repository.get_all_countries()
+        return self.repository.get_all_countries(skip, limit)
 
     def get_country_by_id(self, country_id: int) -> CountryEntity:
         """Get a country by ID
