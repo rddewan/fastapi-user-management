@@ -1,16 +1,29 @@
-from pydantic import BaseModel, Field
+from typing import Optional
+from pydantic import BaseModel
 from app.features.admin.country.domain.country_entity import CountryEntity
 
+class CreateCountryRequest(BaseModel):
+    name: str
+    country_code: str
+    currency_code: str
 
-class CountryCreate(BaseModel):
-    name: str = Field(..., min_length=3, max_length=100)
-    country_code: str = Field(..., min_length=1, max_length=3)
-    currency_code: str = Field(..., min_length=1, max_length=10)
+class UpdateCountryRequest(BaseModel):
+    name: Optional[str] = None
+    country_code: Optional[str] = None
+    currency_code: Optional[str] = None
 
+class PaginationMeta(BaseModel):
+    total: int
+    total_pages: int
+    page_size: int
+    current_page: int
+    
+    
 
 class CountryListResponse(BaseModel):
     status: str
     data: list[CountryEntity]
+    meta: PaginationMeta
 
 
 class CountryResponse(BaseModel):

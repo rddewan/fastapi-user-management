@@ -53,16 +53,36 @@ fastapi dev
 docker compose -f docker-compose-dev.yaml --env-file .env up -d
 ```
 
-### Setup the alembic
+### Alembic Command
+0. Initialize alembic
 ```bash
 alembic init alembic
 ```
-
-### alembic commands
+1. Create migration
 ```bash
-# create a new migration
-alembic revision --autogenerate -m "message"
-
-# apply migrations
+alembic revision --autogenerate -m "your message..."
+```
+2. Update database
+```bash
 alembic upgrade head
 ```
+3. This will undo the last migration
+```bash
+alembic downgrade -1
+```
+
+4. This will list all migration history(You can use this to find the migration to undo)
+```bash
+alembic history --verbose
+```
+
+5. Downgrade to specific revision
+```bash
+alembic downgrade <revision ID>
+```
+
+6. This will reset the database to the initial state
+```bash
+alembic downgrade base
+```
+---

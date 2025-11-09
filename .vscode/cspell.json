@@ -14,8 +14,7 @@
         "Dunder",
         "icountry",
         "icountry",
-        "pycache",
-        "venv",
-        "pynb"
+        "poolclass",
+        "dotenv"
     ]
 }

@@ -1,13 +1,15 @@
 from logging.config import fileConfig
+import os
 
 from sqlalchemy import create_engine
 from sqlalchemy import pool
-import os
-from alembic import context
 from dotenv import load_dotenv
 
-# env_mode = os.getenv("ENV_MODE")
-# env_file = f".env.{env_mode}"
+from alembic import context
+
+# load the .env file
+# env_mode = os.getenv("APP_ENV")
+# enf_file = f".env.{env_mode}"
 load_dotenv(".env")
 
 # this is the Alembic Config object, which provides
@@ -19,17 +21,20 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# setup the database url
+# get the DB_URL from the .env file
 database_url = os.getenv("DATABASE_URL")
 if not database_url:
-    raise ValueError("DATABASE_URL is not set")
+    raise ValueError("DATABASE_URL is not set in the .env file")
 
-# import the Base
+# import the base
 from app.core.data.source.local.base import Base
 
-# import country models
-from app.features.admin.country.infrastructure.models.country_model import CountryModel # type: ignore
-
+# import the models
+try:
+    # import the country model
+    from app.features.admin.country.infrastructure.models.country_model import CountryModel  # type: ignore
+except ImportError:
+    raise ValueError("Models not found")
 
 # add your model's MetaData object here
 # for 'autogenerate' support
@@ -55,6 +60,7 @@ def run_migrations_offline() -> None:
     script output.
 
     """
+
     context.configure(
         url=database_url,
         target_metadata=target_metadata,
@@ -73,11 +79,13 @@ def run_migrations_online() -> None:
     and associate a connection with the context.
 
     """
+
+    # create a engine
     engine = create_engine(database_url, poolclass=pool.NullPool)
-   
+
     with engine.connect() as connection:
         context.configure(
-            connection=connection, 
+            connection=connection,
             target_metadata=target_metadata,
             compare_type=True,
         )

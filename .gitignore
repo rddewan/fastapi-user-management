@@ -2,7 +2,9 @@
 *.env
 *.env.dev
 *.env.prod
+*.pkl
 *.csv
 *.ipynb
+
 .venv/
 __pycache__
