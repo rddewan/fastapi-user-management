@@ -9,6 +9,7 @@ from app.features.admin.country.application.interface.icountry_repository import
 )
 from sqlalchemy.orm import Session
 from app.features.admin.country.domain.country_entity import CountryEntity
+from app.features.admin.country.domain.exceptions.exception import CountryNotFoundException
 from app.features.admin.country.infrastructure.models.country_model import CountryModel
 from app.features.admin.country.infrastructure.mappers.map_country_entity_to_country_model import (
     map_country_entity_to_country_model,
@@ -66,13 +67,16 @@ class CountryRepository(ICountryRepository):
                 .filter(CountryModel.id == country_id)
                 .first()
             )
+            # raise exception if country is not found
+            if result is None:
+                raise CountryNotFoundException(entity="Country", key=country_id)
+
             return map_country_model_to_country_entity(result)
         except OperationalError as e:
             raise ConnectionFailure() from e
         except SQLAlchemyError as e:
             raise TransactionFailure() from e
-        except Exception as e:
-            raise RepositoryException() from e
+        
 
     @override
     def create_country(self, country: CountryEntity) -> CountryEntity:
@@ -165,7 +169,9 @@ class CountryRepository(ICountryRepository):
                 .filter(CountryModel.id == country_id)
                 .first()
             )
-            # TODO: raise exception if country is not found
+            
+            if country_model is None:
+                raise CountryNotFoundException(entity="Country", key=country_id)
 
             # Delete country model
             self.session.delete(country_model)
@@ -179,5 +185,4 @@ class CountryRepository(ICountryRepository):
         except SQLAlchemyError as e:
             self.session.rollback()
             raise TransactionFailure() from e
-        except Exception as e:
-            raise RepositoryException() from e
+        
