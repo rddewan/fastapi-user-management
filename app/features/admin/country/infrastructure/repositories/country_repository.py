@@ -2,6 +2,8 @@ import math
 from typing import override
 
 from sqlalchemy import func
+from sqlalchemy.exc import IntegrityError, OperationalError, SQLAlchemyError
+from app.core.exceptions.repository import ConnectionFailure, RepositoryException, TransactionFailure, UniqueConstraintFailure
 from app.features.admin.country.application.interface.icountry_repository import (
     ICountryRepository,
 )
@@ -23,108 +25,159 @@ class CountryRepository(ICountryRepository):
 
     @override
     def get_all_countries(self, skip: int, limit: int) -> tuple[list[CountryEntity], int, int]:
-        """
-        Get all countries
+        try:
+            """
+            Get all countries
 
-        Returns:
-            list[CountryEntity]: List of country entities
-        """
-        countries = self.session.query(CountryModel).offset(skip).limit(limit).all()
-        # count all the record by id
-        total = self.session.query(func.count(CountryModel.id)).scalar() or 0
-        # total pages
-        total_pages = math.ceil(total / limit) if limit > 0 else 1
-        # Map country model to country entity
-        result = [map_country_model_to_country_entity(country) for country in countries]
-        # Return list of country entities
-        return result, total, total_pages
+            Returns:
+                list[CountryEntity]: List of country entities
+            """
+            countries = self.session.query(CountryModel).offset(skip).limit(limit).all()
+            # count all the record by id
+            total = self.session.query(func.count(CountryModel.id)).scalar() or 0
+            # total pages
+            total_pages = math.ceil(total / limit) if limit > 0 else 1
+            # Map country model to country entity
+            result = [map_country_model_to_country_entity(country) for country in countries]
+            # Return list of country entities
+            return result, total, total_pages
+        except OperationalError as e:
+            raise ConnectionFailure() from e
+        except SQLAlchemyError as e:
+            raise TransactionFailure() from e
+        except Exception as e:
+            raise RepositoryException() from e
 
     @override
     def get_country_by_id(self, country_id: int) -> CountryEntity:
-        """
-        Get country by id
+        try:
 
-        Args:
-            country_id (int): Country id
+            """
+            Get country by id
 
-        Returns:
-            CountryEntity: Country entity
-        """
-        result = (
-            self.session.query(CountryModel)
-            .filter(CountryModel.id == country_id)
-            .first()
-        )
-        return map_country_model_to_country_entity(result)
+            Args:
+                country_id (int): Country id
+
+            Returns:
+                CountryEntity: Country entity
+            """
+            result = (
+                self.session.query(CountryModel)
+                .filter(CountryModel.id == country_id)
+                .first()
+            )
+            return map_country_model_to_country_entity(result)
+        except OperationalError as e:
+            raise ConnectionFailure() from e
+        except SQLAlchemyError as e:
+            raise TransactionFailure() from e
+        except Exception as e:
+            raise RepositoryException() from e
 
     @override
     def create_country(self, country: CountryEntity) -> CountryEntity:
-        """
-        Create country
+        try:
 
-        Args:
-            country (CountryEntity): Country entity
+            """
+            Create country
 
-        Returns:
-            CountryEntity: Country entity
-        """
+            Args:
+                country (CountryEntity): Country entity
 
-        # Map country entity to country model
-        country_model = map_country_entity_to_country_model(country)
-        # Add country model to session
-        self.session.add(country_model)
-        # Commit session
-        self.session.commit()
-        # Map country model to country entity and return
-        return map_country_model_to_country_entity(country_model)
+            Returns:
+                CountryEntity: Country entity
+            """
+
+            # Map country entity to country model
+            country_model = map_country_entity_to_country_model(country)
+            # Add country model to session
+            self.session.add(country_model)
+            # Commit session
+            self.session.commit()
+            # Map country model to country entity and return
+            return map_country_model_to_country_entity(country_model)
+        except IntegrityError as e:
+            self.session.rollback()
+            raise UniqueConstraintFailure() from e
+        except OperationalError as e:
+            self.session.rollback()
+            raise ConnectionFailure() from e
+        except SQLAlchemyError as e:
+            self.session.rollback()
+            raise TransactionFailure() from e
+        except Exception as e:
+            raise RepositoryException() from e
 
     @override
     def update_country(self, country_id: int, country: CountryEntity) -> CountryEntity:
-        """
-        Update country
+        try:
 
-        Args:
-            country_id (int): Country id
-            country (CountryEntity): Country entity
+            """
+            Update country
 
-        Returns:
-            CountryEntity: Country entity
-        """
+            Args:
+                country_id (int): Country id
+                country (CountryEntity): Country entity
 
-        # Get country by id
-        country_model = (
-            self.session.query(CountryModel)
-            .filter(CountryModel.id == country_id)
-            .first()
-        )
-        # TODO: raise exception if country is not found
+            Returns:
+                CountryEntity: Country entity
+            """
 
-        # Map country entity to country model
-        country_model = map_country_entity_to_country_model(country, country_model)        
-        # Commit session
-        self.session.commit()
-        # Map country model to country entity and return
-        return map_country_model_to_country_entity(country_model)
+            # Get country by id
+            country_model = (
+                self.session.query(CountryModel)
+                .filter(CountryModel.id == country_id)
+                .first()
+            )
+            # TODO: raise exception if country is not found
+
+            # Map country entity to country model
+            country_model = map_country_entity_to_country_model(country, country_model)        
+            # Commit session
+            self.session.commit()
+            # Map country model to country entity and return
+            return map_country_model_to_country_entity(country_model)
+        except IntegrityError as e:
+            self.session.rollback()
+            raise UniqueConstraintFailure() from e
+        except OperationalError as e:
+            self.session.rollback()
+            raise ConnectionFailure() from e
+        except SQLAlchemyError as e:
+            self.session.rollback()
+            raise TransactionFailure() from e
+        except Exception as e:
+            raise RepositoryException() from e
 
     @override
     def delete_country(self, country_id: int) -> bool:
-        """
-        Delete country
+        try:
 
-        Args:
-            country_id (int): Country id
-        """
-        # Get country by id
-        country_model = (
-            self.session.query(CountryModel)
-            .filter(CountryModel.id == country_id)
-            .first()
-        )
-        # TODO: raise exception if country is not found
+            """
+            Delete country
 
-        # Delete country model
-        self.session.delete(country_model)
-        # Commit session
-        self.session.commit()
-        # Return true
-        return True
+            Args:
+                country_id (int): Country id
+            """
+            # Get country by id
+            country_model = (
+                self.session.query(CountryModel)
+                .filter(CountryModel.id == country_id)
+                .first()
+            )
+            # TODO: raise exception if country is not found
+
+            # Delete country model
+            self.session.delete(country_model)
+            # Commit session
+            self.session.commit()
+            # Return true
+            return True
+        except OperationalError as e:
+            self.session.rollback()
+            raise ConnectionFailure() from e
+        except SQLAlchemyError as e:
+            self.session.rollback()
+            raise TransactionFailure() from e
+        except Exception as e:
+            raise RepositoryException() from e
