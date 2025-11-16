@@ -1,4 +1,5 @@
 
+from typing import Optional
 from app.core.exceptions.repository import UniqueConstraintFailure
 from app.features.admin.country.application.interface.icountry_repository import (ICountryRepository)
 from app.features.admin.country.domain.country_entity import CountryEntity
@@ -9,14 +10,14 @@ class CountryService:
     def __init__(self, repository: ICountryRepository):
         self.repository = repository
 
-    def get_all_countries(self, skip: int, limit: int) -> tuple[list[CountryEntity], int, int]:
+    def get_all_countries(self, skip: int, limit: int, search: Optional[str] = None) -> tuple[list[CountryEntity], int, int]:
         """Get all the countries
 
         Returns:
             list[CountryEntity]: this will return a list of the CountryEntity
         """
 
-        return self.repository.get_all_countries(skip, limit)
+        return self.repository.get_all_countries(skip, limit, search)
 
     def get_country_by_id(self, country_id: int) -> CountryEntity:
         """Get a country by ID

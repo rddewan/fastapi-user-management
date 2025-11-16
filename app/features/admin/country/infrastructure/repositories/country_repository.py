@@ -1,7 +1,7 @@
 import math
-from typing import override
+from typing import Optional, override
 
-from sqlalchemy import func
+from sqlalchemy import func, or_
 from sqlalchemy.exc import IntegrityError, OperationalError, SQLAlchemyError
 from app.core.exceptions.repository import ConnectionFailure, RepositoryException, TransactionFailure, UniqueConstraintFailure
 from app.features.admin.country.application.interface.icountry_repository import (
@@ -25,7 +25,7 @@ class CountryRepository(ICountryRepository):
         self.session: Session = session
 
     @override
-    def get_all_countries(self, skip: int, limit: int) -> tuple[list[CountryEntity], int, int]:
+    def get_all_countries(self, skip: int, limit: int, search: Optional[str] = None) -> tuple[list[CountryEntity], int, int]:
         try:
             """
             Get all countries
@@ -33,11 +33,36 @@ class CountryRepository(ICountryRepository):
             Returns:
                 list[CountryEntity]: List of country entities
             """
-            countries = self.session.query(CountryModel).offset(skip).limit(limit).all()
+
+            # base query
+            query = self.session.query(CountryModel)
+
+            # search  by name, country_code, currency_code
+            if search:
+                pattern = f"%{search}%"
+                query = query.filter(
+                    or_(
+                        CountryModel.name.ilike(pattern),
+                        CountryModel.country_code.ilike(pattern),
+                        CountryModel.currency_code.ilike(pattern)
+                    )
+                )
+            
+            # sort by the name in asc, then paginate
+            countries = (
+                query
+                .order_by(CountryModel.name.asc())
+                .offset(skip)
+                .limit(limit)
+                .all()
+            )
+
             # count all the record by id
-            total = self.session.query(func.count(CountryModel.id)).scalar() or 0
+            total = query.with_entities(func.count(CountryModel.id)).scalar() or 0
+
             # total pages
             total_pages = math.ceil(total / limit) if limit > 0 else 1
+            
             # Map country model to country entity
             result = [map_country_model_to_country_entity(country) for country in countries]
             # Return list of country entities

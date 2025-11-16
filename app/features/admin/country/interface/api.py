@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, Optional
 from fastapi import Depends, Query, status
 from app.core.router.router import get_versioned_router
 from app.features.admin.country.application.country_service import CountryService
@@ -23,16 +23,19 @@ v1_router = get_versioned_router("v1")
 
 @v1_router.get("/admin/countries", status_code=status.HTTP_200_OK)
 def get_countries(
+    country_service: Annotated[CountryService, Depends(get_country_service)],
     skip: Annotated[
         int, Query(ge=1, description="Page number should be greater than or equal to 1")
     ],
     limit: Annotated[
         int, Query(ge=1, description="Page size should be greater than or equal to 1")
     ],
-    country_service: Annotated[CountryService, Depends(get_country_service)],
+    search: Annotated[
+        Optional[str], Query(description="Search query for country name, country_code, currency_code")
+    ] = None,
 ) -> CountryListResponse:
     # call the service method to get the countries
-    result, total, total_pages = country_service.get_all_countries(skip - 1, limit)
+    result, total, total_pages = country_service.get_all_countries(skip - 1, limit, search)
     # create pagination meta
     meta: PaginationMeta = PaginationMeta(
         total=total, total_pages=total_pages, page_size=limit, current_page=skip

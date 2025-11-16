@@ -15,6 +15,7 @@
         "icountry",
         "icountry",
         "poolclass",
-        "dotenv"
+        "dotenv",
+        "ilike",
     ]
 }

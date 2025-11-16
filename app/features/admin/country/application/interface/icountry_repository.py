@@ -1,6 +1,7 @@
-
 from abc import ABC, abstractmethod
+from typing import Optional
 from app.features.admin.country.domain.country_entity import CountryEntity
+
 
 class ICountryRepository(ABC):
     """
@@ -8,7 +9,9 @@ class ICountryRepository(ABC):
     """
 
     @abstractmethod
-    def get_all_countries(self, skip: int, limit: int) -> tuple[list[CountryEntity], int, int]:
+    def get_all_countries(
+        self, skip: int, limit: int, search: Optional[str] = None
+    ) -> tuple[list[CountryEntity], int, int]:
         """
         Get all countries
         """
@@ -27,19 +30,17 @@ class ICountryRepository(ABC):
         Create country
         """
         pass
-    
+
     @abstractmethod
     def update_country(self, country_id: int, country: CountryEntity) -> CountryEntity:
         """
         Update country
         """
         pass
-    
+
     @abstractmethod
     def delete_country(self, country_id: int) -> bool:
         """
         Delete country
         """
         pass
-    
-    
