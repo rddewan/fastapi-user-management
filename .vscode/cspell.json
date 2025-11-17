@@ -17,5 +17,6 @@
         "poolclass",
         "dotenv",
         "ilike",
+        "onupdate",
     ]
 }

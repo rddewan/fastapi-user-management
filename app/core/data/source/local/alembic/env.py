@@ -33,6 +33,7 @@ from app.core.data.source.local.base import Base
 try:
     # import the country model
     from app.features.admin.country.infrastructure.models.country_model import CountryModel  # type: ignore
+    from app.features.shared.user.infrastructure.models.user_model import UserModel  # type: ignore
 except ImportError:
     raise ValueError("Models not found")
 
