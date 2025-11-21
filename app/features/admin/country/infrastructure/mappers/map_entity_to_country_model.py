@@ -5,7 +5,7 @@ from sqlalchemy.orm.query import inspect
 from app.features.admin.country.domain.country_entity import CountryEntity
 from app.features.admin.country.infrastructure.models.country_model import CountryModel
 
-def map_country_entity_to_country_model(
+def map_entity_to_country_model(
     entity: CountryEntity, 
     model: Optional[CountryModel] = None,
 ) -> CountryModel:

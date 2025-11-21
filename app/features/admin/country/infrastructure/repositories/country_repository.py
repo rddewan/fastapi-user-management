@@ -11,11 +11,11 @@ from sqlalchemy.orm import Session
 from app.features.admin.country.domain.country_entity import CountryEntity
 from app.features.admin.country.domain.exceptions.exception import CountryNotFoundException
 from app.features.admin.country.infrastructure.models.country_model import CountryModel
-from app.features.admin.country.infrastructure.mappers.map_country_entity_to_country_model import (
-    map_country_entity_to_country_model,
+from app.features.admin.country.infrastructure.mappers.map_entity_to_country_model import (
+    map_entity_to_country_model,
 )
-from app.features.admin.country.infrastructure.mappers.map_country_model_to_country_entity import (
-    map_country_model_to_country_entity,
+from app.features.admin.country.infrastructure.mappers.map_country_model_to_entity import (
+    map_country_model_to_entity,
 )
 
 
@@ -64,7 +64,7 @@ class CountryRepository(ICountryRepository):
             total_pages = math.ceil(total / limit) if limit > 0 else 1
             
             # Map country model to country entity
-            result = [map_country_model_to_country_entity(country) for country in countries]
+            result = [map_country_model_to_entity(country) for country in countries]
             # Return list of country entities
             return result, total, total_pages
         except OperationalError as e:
@@ -96,7 +96,7 @@ class CountryRepository(ICountryRepository):
             if result is None:
                 raise CountryNotFoundException(entity="Country", key=country_id)
 
-            return map_country_model_to_country_entity(result)
+            return map_country_model_to_entity(result)
         except OperationalError as e:
             raise ConnectionFailure() from e
         except SQLAlchemyError as e:
@@ -118,13 +118,13 @@ class CountryRepository(ICountryRepository):
             """
 
             # Map country entity to country model
-            country_model = map_country_entity_to_country_model(country)
+            country_model = map_entity_to_country_model(country)
             # Add country model to session
             self.session.add(country_model)
             # Commit session
             self.session.commit()
             # Map country model to country entity and return
-            return map_country_model_to_country_entity(country_model)
+            return map_country_model_to_entity(country_model)
         except IntegrityError as e:
             self.session.rollback()
             raise UniqueConstraintFailure() from e
@@ -161,11 +161,11 @@ class CountryRepository(ICountryRepository):
             # TODO: raise exception if country is not found
 
             # Map country entity to country model
-            country_model = map_country_entity_to_country_model(country, country_model)        
+            country_model = map_entity_to_country_model(country, country_model)        
             # Commit session
             self.session.commit()
             # Map country model to country entity and return
-            return map_country_model_to_country_entity(country_model)
+            return map_country_model_to_entity(country_model)
         except IntegrityError as e:
             self.session.rollback()
             raise UniqueConstraintFailure() from e

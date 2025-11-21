@@ -9,9 +9,9 @@ from typing import Optional
 class UserEntity:
     username: str
     email: str
-    hashed_password: str
     is_active: bool = True
     id: Optional[int] = None
+    hashed_password: Optional[str] = None
     full_name: Optional[str] = None
     phone: Optional[str] = None
     created_at: Optional[datetime] = None

@@ -1,7 +1,7 @@
 from app.features.admin.country.domain.country_entity import CountryEntity
 from app.features.admin.country.infrastructure.models.country_model import CountryModel
 
-def map_country_model_to_country_entity(model: CountryModel) -> CountryEntity:
+def map_country_model_to_entity(model: CountryModel) -> CountryEntity:
     """
     Map a CountryModel to a CountryEntity.
 
