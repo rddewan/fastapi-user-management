@@ -1,6 +1,7 @@
 
 
 from abc import ABC, abstractmethod
+from typing import Optional
 
 from app.features.shared.user.domain.user_entity import UserEntity
 
@@ -11,7 +12,7 @@ class IUserRepository(ABC):
     """
 
     @abstractmethod
-    def get_all(self, skip: int, limit: int) -> list[UserEntity]:
+    def get_all(self, skip: int, limit: int, search: Optional[str] = None) -> tuple[list[UserEntity], int, int]:
         pass
     
     @abstractmethod

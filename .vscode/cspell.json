@@ -18,5 +18,6 @@
         "dotenv",
         "ilike",
         "onupdate",
+        "iuser"
     ]
 }
