@@ -135,6 +135,7 @@ class CountryRepository(ICountryRepository):
             self.session.rollback()
             raise TransactionFailure() from e
         except Exception as e:
+            self.session.rollback()
             raise RepositoryException() from e
 
     @override
@@ -176,6 +177,7 @@ class CountryRepository(ICountryRepository):
             self.session.rollback()
             raise TransactionFailure() from e
         except Exception as e:
+            self.session.rollback()
             raise RepositoryException() from e
 
     @override

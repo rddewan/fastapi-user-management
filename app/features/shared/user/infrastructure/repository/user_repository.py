@@ -108,6 +108,7 @@ class UserRepository(IUserRepository):
             self.session.rollback()
             raise TransactionFailure() from e
         except Exception as e:
+            self.session.rollback()
             raise RepositoryException() from e
 
     @override
@@ -140,6 +141,7 @@ class UserRepository(IUserRepository):
             self.session.rollback()
             raise TransactionFailure() from e
         except Exception as e:
+            self.session.rollback()
             raise RepositoryException() from e
 
     @override

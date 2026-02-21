@@ -10,7 +10,7 @@ class UserNotFound(NotFoundException):
         super().__init__(message)
 
 
-class UserAlreadyExistsException(AlreadyExistsException):
+class UserAlreadyExistException(AlreadyExistsException):
     def __init__(self, entity: str, key: str):
         message = f"{entity} already exists with {key}"
         self.message = message
