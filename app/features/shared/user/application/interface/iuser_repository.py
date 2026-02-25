@@ -4,6 +4,7 @@ from abc import ABC, abstractmethod
 from typing import Optional
 
 from app.features.shared.user.domain.user_entity import UserEntity
+from app.features.shared.user.domain.user_patch_entity import UserPatchEntity
 
 
 class IUserRepository(ABC):
@@ -24,7 +25,7 @@ class IUserRepository(ABC):
         pass
     
     @abstractmethod
-    def update(self, id: int, entity: UserEntity) -> UserEntity:
+    def update(self, id: int, entity: UserPatchEntity) -> UserEntity:
         pass
     
     @abstractmethod

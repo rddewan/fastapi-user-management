@@ -37,7 +37,7 @@ class CreateUserRequest(BaseModel):
         return self
     
 
-class UpdateUserRespone(BaseModel):
+class UpdateUserRequest(BaseModel):
     full_name: Optional[str]
     phone: Optional[str]
     is_active: Optional[str]

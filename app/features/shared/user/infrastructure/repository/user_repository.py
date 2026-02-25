@@ -14,6 +14,7 @@ from app.features.shared.user.application.interface.iuser_repository import (
 )
 from app.features.shared.user.domain.exceptions.exception import UserNotFound
 from app.features.shared.user.domain.user_entity import UserEntity
+from app.features.shared.user.domain.user_patch_entity import UserPatchEntity
 from app.features.shared.user.infrastructure.mappers.map_entity_to_user_model import (
     map_entity_to_user_model,
 )
@@ -112,7 +113,7 @@ class UserRepository(IUserRepository):
             raise RepositoryException() from e
 
     @override
-    def update(self, id: int, entity: UserEntity) -> UserEntity:
+    def update(self, id: int, entity: UserPatchEntity) -> UserEntity:
         try:
 
             # Get user by id
