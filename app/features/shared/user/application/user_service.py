@@ -18,7 +18,7 @@ class UserService:
     ) -> tuple[list[UserEntity], int, int]:
         return self.user_repository.get_all(skip=skip, limit=limit, search=search)
     
-    def get_user_byt_id(self, id: int) -> UserEntity:
+    def get_user_by_id(self, id: int) -> UserEntity:
         return self.user_repository.get_by_id(id=id)
     
     def create_user(self, user: UserEntity) -> UserEntity:
