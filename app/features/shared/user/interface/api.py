@@ -57,7 +57,7 @@ def create_user(
     # map the request body to user entity
     user_entity = mapCreateUserSchemaToEntity(user_schems=data)
     
-    result = user_service.create_user(user=user_entity)
+    result = user_service.create_user(user=user_entity, password=data.password)
     
 
     return UserResponse(

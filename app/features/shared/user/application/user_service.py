@@ -30,13 +30,14 @@ class UserService:
     def get_user_by_id(self, id: int) -> UserEntity:
         return self.user_repository.get_by_id(id=id)
 
-    def create_user(self, user: UserEntity) -> UserEntity:
+    def create_user(self, user: UserEntity, password: str) -> UserEntity:
         try:
+            user.hashed_password = self.password_service.hash_password(password=password)
             return self.user_repository.create(entity=user)
         except UniqueConstraintFailure:
             raise UserAlreadyExistException(entity=user, key=user.email)
 
-    def update_user(self, id: int, user: UserEntity) -> UserEntity:
+    def update_user(self, id: int, user: UserPatchEntity) -> UserEntity:
         try:
             return self.user_repository.update(id=id, entity=user)
         except UniqueConstraintFailure:

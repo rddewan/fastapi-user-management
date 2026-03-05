@@ -7,6 +7,7 @@ def map_user_model_to_entity(model: UserModel) -> UserEntity:
     return UserEntity(
         id=model.id,
         username=model.username,
+        hashed_password=model.hashed_password,
         full_name=model.full_name,
         email=model.email,
         phone=model.phone,

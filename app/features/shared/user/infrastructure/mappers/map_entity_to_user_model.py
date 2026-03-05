@@ -16,6 +16,7 @@ def map_entity_to_user_model(
             id=entity.id,
             username=entity.username,
             full_name=entity.full_name,
+            hashed_password=entity.hashed_password,
             email=entity.email,
             phone=entity.phone,
             is_active=entity.is_active,

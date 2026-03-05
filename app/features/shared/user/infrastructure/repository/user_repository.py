@@ -117,14 +117,14 @@ class UserRepository(IUserRepository):
         try:
 
             # Get user by id
-            user = self.session.query(UserModel).filter(UserModel.id == id).first()
+            user_model = self.session.query(UserModel).filter(UserModel.id == id).first()
            
             # raise exception if user is not found
-            if user is None:
+            if user_model is None:
                 raise UserNotFound(entity="User", key="id")
 
             # Map user entity to user model
-            user_model = map_entity_to_user_model(entity)
+            user_model = map_entity_to_user_model(entity,user_model)
                  
             # Commit session
             self.session.commit()

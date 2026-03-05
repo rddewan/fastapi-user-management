@@ -38,9 +38,9 @@ class CreateUserRequest(BaseModel):
     
 
 class UpdateUserRequest(BaseModel):
-    full_name: Optional[str]
-    phone: Optional[str]
-    is_active: Optional[str]
+    full_name: Optional[str] = None
+    phone: Optional[str] = None
+    is_active: Optional[bool] = None
     
 
 class UpdateEmailRequest(BaseModel):
