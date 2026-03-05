@@ -2,9 +2,7 @@
 
 import re
 from typing import Optional
-from pydantic import BaseModel, EmailStr, Field, field_validator, model_validator
-
-from app.features.shared.user.domain.user_entity import UserEntity
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator, model_validator
 
 
 class CreateUserRequest(BaseModel):
@@ -88,6 +86,16 @@ class UpdatePasswordRequest(BaseModel):
         return self
 
 
+class UserData(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    
+    id: Optional[int] = None
+    username: str
+    email: str
+    full_name: Optional[str] = None
+    phone: Optional[str] = None
+    is_active: bool = True
+
 class PaginationMeta(BaseModel):
     total: int
     total_page: int
@@ -96,10 +104,10 @@ class PaginationMeta(BaseModel):
 
 class UserListResponse(BaseModel):
     status: str
-    data: list[UserEntity]
+    data: list[UserData]
     meta: PaginationMeta
     
 
 class UserResponse(BaseModel):
     status: str
-    data: UserEntity
+    data: UserData

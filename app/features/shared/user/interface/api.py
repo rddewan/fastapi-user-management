@@ -6,7 +6,7 @@ from app.features.shared.user.application.user_service import UserService
 from app.features.shared.user.interface.dependencies import get_user_service
 from app.features.shared.user.interface.mappers.map_create_user_schema_to_entity import mapCreateUserSchemaToEntity
 from app.features.shared.user.interface.mappers.map_update_user_schema_to_entity import mapUpdateUserEntityToEntity
-from app.features.shared.user.interface.schemas import CreateUserRequest, PaginationMeta, UpdateEmailRequest, UpdatePasswordRequest, UpdateUserRequest, UserListResponse, UserResponse
+from app.features.shared.user.interface.schemas import CreateUserRequest, PaginationMeta, UpdateEmailRequest, UpdatePasswordRequest, UpdateUserRequest, UserData, UserListResponse, UserResponse
 
 
 v1_router = get_versioned_router("v1")
@@ -31,7 +31,7 @@ def get_users(
     )
     return UserListResponse(
         status="success",
-        data=result,
+        data=[UserData.model_validate(user) for user in result],
         meta=meta
     )
     
@@ -46,7 +46,7 @@ def get_user_by_id(
 
     return UserResponse(
         status="success",
-        data=result
+        data=UserData.model_validate(result),
     )
     
 @v1_router.post("/users", status_code=status.HTTP_201_CREATED)
@@ -62,7 +62,7 @@ def create_user(
 
     return UserResponse(
         status="success",
-        data=result
+        data=UserData.model_validate(result),
     )
     
 @v1_router.patch("/users/{user_id}", status_code=status.HTTP_200_OK)
@@ -79,7 +79,7 @@ def patch_user(
 
     return UserResponse(
         status="success",
-        data=result
+        data=UserData.model_validate(result),
     )
     
 
@@ -99,7 +99,7 @@ def patch_user_email(
 
     return UserResponse(
         status="success",
-        data=result
+        data=UserData.model_validate(result),
     )
     
 @v1_router.patch("/users/{user_id}/password", status_code=status.HTTP_200_OK)
@@ -118,7 +118,7 @@ def patch_user_password(
 
     return UserResponse(
         status="success",
-        data=result
+        data=UserData.model_validate(result),
     )
     
 @v1_router.delete("/users/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
